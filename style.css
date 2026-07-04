@@ -164,6 +164,20 @@ h1, h2 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01
 .nav__links a:hover { color: var(--text); }
 .nav__links a:hover::after { width: 100%; }
 
+.nav__links a.nav__lang {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  align-self: center;
+}
+.nav__links a.nav__lang::after { display: none; }
+.nav__links a.nav__lang:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .nav__toggle {
   display: none;
   flex-direction: column;
@@ -579,6 +593,7 @@ body.custom-cursor-active, body.custom-cursor-active a, body.custom-cursor-activ
   }
   .nav__links.open { transform: translateX(0); }
   .nav__links a { font-size: 1.1rem; }
+  .nav__links a.nav__lang { align-self: flex-start; font-size: 0.85rem; }
   .nav__toggle { display: flex; }
 
   .hero__content { padding-bottom: 6rem; }

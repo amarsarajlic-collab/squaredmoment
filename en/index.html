@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>squaredmoments — Photography</title>
+<meta name="description" content="Hobby photographer — landscapes, architecture &amp; moments in black-and-white and colour.">
+<link rel="alternate" hreflang="de" href="https://www.squaredmoments.com/">
+<link rel="alternate" hreflang="en" href="https://www.squaredmoments.com/en/">
+<link rel="icon" href="../logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../logo/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="../logo/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="../logo/apple-touch-icon-180.png">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"><span class="cursor-ring__label" id="cursorLabel"></span></div>
+
+<header class="nav" id="nav">
+  <a href="#home" class="nav__logo"><img src="../logo/logo-horizontal-dark-bg.svg" alt="squaredmoments" class="nav__logo-img"></a>
+  <nav class="nav__links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#about">About me</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#contact">Contact</a>
+    <a href="../index.html" class="nav__lang" aria-label="Zur deutschen Version wechseln">DE</a>
+  </nav>
+  <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero__bg">
+    <img src="../images/hero-torii.jpg" alt="Torii gate surrounded by trees" loading="eager">
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <p class="hero__eyebrow">Photography with passion</p>
+    <h1 class="hero__title">Capturing light,<br>preserving moments</h1>
+    <p class="hero__subtitle">Hobby photographer — landscapes, architecture &amp; the life in between</p>
+    <a href="#gallery" class="btn" data-cursor="View">View gallery</a>
+  </div>
+  <a href="#about" class="hero__scroll" aria-label="Scroll down">
+    <span></span>
+  </a>
+</section>
+
+<section class="about" id="about">
+  <div class="about__image reveal">
+    <img src="../images/about-photo.jpg" alt="Photo taken by the photographer">
+  </div>
+  <div class="about__text reveal">
+    <p class="section-eyebrow">About me</p>
+    <h2>Behind the camera</h2>
+    <p>
+      For several years now, my camera has accompanied me through everyday
+      life — on trips, on walks and in quiet moments. To me, photography is
+      not a job but a way of seeing the world more consciously.
+    </p>
+    <p>
+      I'm fascinated by natural light, calm compositions and genuine
+      emotions. This site is a collection of my favourite shots — created
+      without pressure, purely out of the joy of seeing and capturing.
+    </p>
+    <ul class="about__stats">
+      <li><strong>10+</strong><span>Years of experience</span></li>
+      <li><strong>&infin;</strong><span>Memories</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="gallery gallery--soon" id="gallery">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Portfolio</p>
+    <h2>Gallery coming soon</h2>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact__inner reveal">
+    <p class="section-eyebrow">Contact</p>
+    <h2>Let's stay in touch</h2>
+    <p class="contact__text">
+      Got a question about a picture or simply want to say hello?
+      I'd love to hear from you.
+    </p>
+    <a class="btn btn--outline" href="mailto:squaredmoments@gmail.com">squaredmoments@gmail.com</a>
+    <div class="socials">
+      <a href="https://www.instagram.com/squaredmoment" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>&copy; <span id="year"></span> squaredmoments — All images made with attention to detail.</p>
+  <p class="footer__legal"><a href="impressum.html">Imprint</a> &middot; <a href="datenschutz.html">Privacy</a></p>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">&times;</button>
+  <button class="lightbox__nav lightbox__prev" id="lightboxPrev" aria-label="Previous image">&#8249;</button>
+  <img src="" alt="" id="lightboxImg">
+  <button class="lightbox__nav lightbox__next" id="lightboxNext" aria-label="Next image">&#8250;</button>
+  <p class="lightbox__caption" id="lightboxCaption"></p>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
