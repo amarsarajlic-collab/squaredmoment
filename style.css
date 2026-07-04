@@ -167,9 +167,12 @@ h1, h2 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01
 .nav__right {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: clamp(1.2rem, 2.5vw, 2.4rem);
 }
 .nav__lang {
+  flex-shrink: 0;
+  white-space: nowrap;
   border: 1px solid var(--accent);
   border-radius: 20px;
   padding: 0.32rem 0.9rem 0.36rem;
