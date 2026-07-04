@@ -408,6 +408,32 @@ h1, h2 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01
   border-top: 1px solid var(--line);
   background: var(--bg);
 }
+.footer__legal { margin-top: 0.6rem; }
+.footer__legal a { color: var(--text-dim); }
+.footer__legal a:hover { color: var(--accent); }
+
+/* LEGAL PAGES */
+.legal {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(8rem, 12vw, 10rem) 5vw clamp(5rem, 8vw, 7rem);
+  color: var(--text-dim);
+}
+.legal h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--text);
+  margin-bottom: 2.2rem;
+}
+.legal h2 {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--text);
+  margin: 2.4rem 0 0.8rem;
+}
+.legal p, .legal li { margin-bottom: 0.9rem; line-height: 1.7; }
+.legal a { color: var(--accent); text-decoration: underline; }
+.legal ul { padding-left: 1.2rem; }
 
 /* LIGHTBOX */
 .lightbox {
