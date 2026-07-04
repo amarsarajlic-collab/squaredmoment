@@ -107,11 +107,61 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') lightboxNext.click();
 });
 
-// Subtle cursor glow (desktop)
-const glow = document.getElementById('cursorGlow');
-if (window.matchMedia('(hover: hover)').matches) {
+// Custom cursor: dot + trailing ring, enlarges on hover
+const cursorDot = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+const cursorLabel = document.getElementById('cursorLabel');
+
+if (cursorDot && cursorRing && window.matchMedia('(pointer: fine)').matches) {
+  document.body.classList.add('custom-cursor-active');
+
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+  let started = false;
+
   window.addEventListener('mousemove', (e) => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+
+    if (!started) {
+      started = true;
+      ringX = mouseX;
+      ringY = mouseY;
+      cursorDot.classList.add('is-visible');
+      cursorRing.classList.add('is-visible');
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    cursorDot.classList.remove('is-visible');
+    cursorRing.classList.remove('is-visible');
+  });
+  document.addEventListener('mouseenter', () => {
+    cursorDot.classList.add('is-visible');
+    cursorRing.classList.add('is-visible');
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateRing);
+  }
+  requestAnimationFrame(animateRing);
+
+  document.addEventListener('mousedown', () => cursorRing.classList.add('is-pressed'));
+  document.addEventListener('mouseup', () => cursorRing.classList.remove('is-pressed'));
+
+  const hoverTargets = document.querySelectorAll('a, button, .grid__item');
+  hoverTargets.forEach((el) => {
+    el.addEventListener('mouseenter', () => {
+      cursorRing.classList.add('is-hover');
+      cursorLabel.textContent = el.dataset.cursor || '';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursorRing.classList.remove('is-hover');
+      cursorLabel.textContent = '';
+    });
   });
 }
