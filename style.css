@@ -132,11 +132,14 @@ h1, h2 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01
   height: 64px;
 }
 .nav__logo {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
 }
-.nav__logo span { color: var(--accent); }
+.nav__logo-img {
+  height: 26px;
+  width: auto;
+  display: block;
+}
 
 .nav__links {
   display: flex;
