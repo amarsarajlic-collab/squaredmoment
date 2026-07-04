@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lena Weber — Fotografie</title>
+<meta name="description" content="Hobbyfotograf:in — Portraits, Landschaften &amp; Momente in Schwarzweiß und Farbe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<header class="nav" id="nav">
+  <a href="#home" class="nav__logo">Lena<span>Weber</span></a>
+  <nav class="nav__links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#about">Über mich</a>
+    <a href="#gallery">Galerie</a>
+    <a href="#contact">Kontakt</a>
+  </nav>
+  <button class="nav__toggle" id="navToggle" aria-label="Menü öffnen">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero__bg">
+    <img src="https://picsum.photos/id/1015/1600/2000" alt="" loading="eager">
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <p class="hero__eyebrow">Fotografie aus Leidenschaft</p>
+    <h1 class="hero__title">Licht einfangen,<br>Momente bewahren</h1>
+    <p class="hero__subtitle">Hobbyfotograf:in aus Leidenschaft — Portraits, Landschaften &amp; das Leben dazwischen</p>
+    <a href="#gallery" class="btn">Galerie ansehen</a>
+  </div>
+  <a href="#about" class="hero__scroll" aria-label="Nach unten scrollen">
+    <span></span>
+  </a>
+</section>
+
+<section class="about" id="about">
+  <div class="about__image reveal">
+    <img src="https://picsum.photos/id/1005/900/1100" alt="Porträt der Fotografin">
+  </div>
+  <div class="about__text reveal">
+    <p class="section-eyebrow">Über mich</p>
+    <h2>Hinter der Kamera</h2>
+    <p>
+      Schon seit einigen Jahren begleitet mich die Kamera durch den Alltag —
+      auf Reisen, bei Spaziergängen und in ruhigen Momenten. Fotografie ist
+      für mich kein Beruf, sondern eine Art, die Welt bewusster wahrzunehmen.
+    </p>
+    <p>
+      Mich faszinieren natürliches Licht, ruhige Kompositionen und echte
+      Emotionen. Diese Seite ist eine Sammlung meiner liebsten Aufnahmen —
+      entstanden ohne Druck, aus reiner Freude am Sehen und Festhalten.
+    </p>
+    <ul class="about__stats">
+      <li><strong>4+</strong><span>Jahre Erfahrung</span></li>
+      <li><strong>500+</strong><span>Aufnahmen</span></li>
+      <li><strong>3</strong><span>Lieblingsorte</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Portfolio</p>
+    <h2>Galerie</h2>
+  </div>
+
+  <div class="filters reveal" id="filters">
+    <button class="filter active" data-filter="all">Alle</button>
+    <button class="filter" data-filter="portrait">Portrait</button>
+    <button class="filter" data-filter="landscape">Landschaft</button>
+    <button class="filter" data-filter="street">Street</button>
+    <button class="filter" data-filter="nature">Natur</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <figure class="grid__item reveal" data-cat="landscape" style="--span:2">
+      <img src="https://picsum.photos/id/1018/1200/800" alt="Bergpanorama bei Sonnenuntergang" loading="lazy">
+      <figcaption>Bergpanorama, Alpen</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="portrait">
+      <img src="https://picsum.photos/id/1027/800/1000" alt="Porträt im Gegenlicht" loading="lazy">
+      <figcaption>Gegenlicht</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="https://picsum.photos/id/1031/800/1000" alt="Straßenszene in der Stadt" loading="lazy">
+      <figcaption>Stadtleben</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="nature">
+      <img src="https://picsum.photos/id/1043/800/1000" alt="Nahaufnahme einer Pflanze" loading="lazy">
+      <figcaption>Details der Natur</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="landscape">
+      <img src="https://picsum.photos/id/1036/800/1000" alt="Küstenlandschaft" loading="lazy">
+      <figcaption>Küste bei Ebbe</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="portrait" style="--span:2">
+      <img src="https://picsum.photos/id/1011/1200/800" alt="Porträt am Wasser" loading="lazy">
+      <figcaption>Am Wasser</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="nature">
+      <img src="https://picsum.photos/id/1039/800/1000" alt="Wald im Nebel" loading="lazy">
+      <figcaption>Nebel im Wald</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="https://picsum.photos/id/1025/800/1000" alt="Momentaufnahme auf der Straße" loading="lazy">
+      <figcaption>Zufällige Begegnung</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="landscape">
+      <img src="https://picsum.photos/id/1049/800/1000" alt="Weites Feld bei Morgenlicht" loading="lazy">
+      <figcaption>Morgenlicht</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact__inner reveal">
+    <p class="section-eyebrow">Kontakt</p>
+    <h2>Lass uns in Verbindung bleiben</h2>
+    <p class="contact__text">
+      Du hast Fragen zu einem Bild, möchtest ein Shooting anfragen oder
+      einfach nur Hallo sagen? Ich freue mich über eine Nachricht.
+    </p>
+    <a class="btn btn--outline" href="mailto:hallo@lenaweber-fotografie.de">hallo@lenaweber-fotografie.de</a>
+    <div class="socials">
+      <a href="#" aria-label="Instagram">Instagram</a>
+      <a href="#" aria-label="500px">500px</a>
+      <a href="#" aria-label="Pinterest">Pinterest</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>&copy; <span id="year"></span> Lena Weber — Alle Bilder mit Liebe zum Detail.</p>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Schließen">&times;</button>
+  <button class="lightbox__nav lightbox__prev" id="lightboxPrev" aria-label="Vorheriges Bild">&#8249;</button>
+  <img src="" alt="" id="lightboxImg">
+  <button class="lightbox__nav lightbox__next" id="lightboxNext" aria-label="Nächstes Bild">&#8250;</button>
+  <p class="lightbox__caption" id="lightboxCaption"></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
