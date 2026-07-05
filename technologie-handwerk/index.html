@@ -157,6 +157,52 @@
 
   .no-results { text-align: center; color: var(--muted); display: none; padding: 40px; }
 
+  /* Produktkarte */
+  .card.product .product-img {
+    display: block;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 0 12px;
+  }
+  .card.product .product-img img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
+  }
+  .card.product .specs {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    font-size: .86rem;
+    color: var(--muted);
+  }
+  .card.product .specs li {
+    padding: 5px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card.product .specs li:first-child { border-top: none; }
+  .card.product .specs .k { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .card.product .specs .v { text-align: right; }
+  .product-link {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .9rem;
+    transition: opacity .12s ease;
+  }
+  .product-link:hover { opacity: .88; }
+
   /* Glossar-Tooltips */
   .term {
     border-bottom: 1px dotted var(--accent);
@@ -280,7 +326,23 @@
   <section class="category" data-topic="elektronik" data-cat="Elektronik">
     <h2><span class="emoji">⚡</span> Elektronik</h2>
     <div class="grid">
-      <div class="card"><h3>Beispiel: Löten</h3><p>Beispiel-Eintrag. Erst das Werkstück erhitzen, dann das Lötzinn zuführen — nicht umgekehrt. Ersetze diese Karte durch deinen eigenen Eintrag.</p><span class="tag">Beispiel</span></div>
+      <div class="card product">
+        <a class="product-img" href="https://www.apple.com/de/shop/product/mw5j3zm/a/thunderbolt-4-usb%E2%80%91c-pro-kabel-18-m" target="_blank" rel="noopener">
+          <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MW5J3?wid=1000&amp;hei=1000&amp;fmt=jpeg" alt="Apple Thunderbolt 4 (USB-C) Pro Kabel (1,8 m), schwarz geflochten">
+        </a>
+        <h3>Apple Thunderbolt 4 (USB-C) Pro Kabel · 1,8 m</h3>
+        <p>Schwarzes, geflochtenes Pro-Kabel, das höchste Datenraten, Videoausgabe per DisplayPort und Laden bis 100 W über einen einzigen USB-C-Stecker vereint.</p>
+        <ul class="specs">
+          <li><span class="k">Datenrate</span><span class="v">bis 40 Gbit/s (Thunderbolt 4, USB 4)</span></li>
+          <li><span class="k">USB 3.1 Gen 2</span><span class="v">bis 10 Gbit/s</span></li>
+          <li><span class="k">Video</span><span class="v">DisplayPort HBR3</span></li>
+          <li><span class="k">Laden</span><span class="v">bis 100 W</span></li>
+          <li><span class="k">Länge</span><span class="v">1,8 m · geflochten</span></li>
+          <li><span class="k">Anschlüsse</span><span class="v">USB-C ↔ USB-C</span></li>
+        </ul>
+        <a class="product-link" href="https://www.apple.com/de/shop/product/mw5j3zm/a/thunderbolt-4-usb%E2%80%91c-pro-kabel-18-m" target="_blank" rel="noopener">Bei Apple ansehen →</a>
+        <div style="margin-top:12px"><span class="tag">Thunderbolt 4</span></div>
+      </div>
     </div>
   </section>
 
@@ -308,7 +370,14 @@
   // ---- Glossar: Fachbegriff -> Erklärung (hier eigene Begriffe ergänzen) ----
   const glossar = {
     "Drehmoment": "Die Dreh- bzw. Anzugskraft eines Werkzeugs, gemessen in Newtonmetern (Nm) — je höher, desto kräftiger.",
-    "Lötzinn": "Metalllegierung mit niedrigem Schmelzpunkt, die beim Löten zwei Teile elektrisch und mechanisch verbindet."
+    "Lötzinn": "Metalllegierung mit niedrigem Schmelzpunkt, die beim Löten zwei Teile elektrisch und mechanisch verbindet.",
+    "Thunderbolt 4": "Hochgeschwindigkeits-Schnittstelle über USB-C — überträgt Daten (bis 40 Gbit/s), Video und Strom über ein Kabel.",
+    "USB 4": "USB-Standard auf Thunderbolt-Basis mit bis zu 40 Gbit/s Datenrate.",
+    "USB-C": "Verdrehsicherer, ovaler Stecker — gemeinsame Grundlage für USB, Thunderbolt und Laden.",
+    "DisplayPort": "Digitaler Videostandard zur Bildübertragung an Monitore.",
+    "HBR3": "„High Bit Rate 3“ — DisplayPort-Modus mit bis zu 32,4 Gbit/s, genug für 4K/8K-Displays.",
+    "Gbit/s": "Gigabit pro Sekunde — Maß für die Datenrate (1 Gbit/s entspricht ca. 125 MB/s).",
+    "W": "Watt — Maß für die elektrische Leistung, hier die maximale Ladeleistung des Kabels."
   };
 
   const begriffe = Object.keys(glossar).sort((a, b) => b.length - a.length);
@@ -347,7 +416,7 @@
     });
   }
 
-  document.querySelectorAll('.card p, .card .tag').forEach(el => {
+  document.querySelectorAll('.card p, .card .tag, .card .specs .v').forEach(el => {
     for (let i = 0; i < 6; i++) markiere(el);
   });
 
