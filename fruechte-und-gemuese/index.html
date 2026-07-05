@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Früchte &amp; Gemüse</title>
+<style>
+  :root {
+    --bg: #fbf8f4;
+    --card: #ffffff;
+    --ink: #2b2b2b;
+    --muted: #6b6b6b;
+    --accent: #cf6a1f;
+    --accent-soft: #fbeade;
+    --border: #efe4d8;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.05);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  header {
+    text-align: center;
+    padding: 48px 20px 24px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  header .heart { font-size: 44px; line-height: 1; }
+  h1 { font-size: 2rem; margin: 12px 0 6px; letter-spacing: -0.5px; }
+  header p { color: var(--muted); margin: 0 auto; max-width: 560px; }
+
+  .search-wrap {
+    max-width: 760px;
+    margin: 24px auto 8px;
+    padding: 0 20px;
+  }
+  #search {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    outline: none;
+  }
+  #search:focus { border-color: var(--accent); }
+
+  .tabs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 820px;
+    margin: 18px auto 0;
+    padding: 0 20px;
+  }
+  .tab {
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 9px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--muted);
+    box-shadow: var(--shadow);
+    transition: all .12s ease;
+  }
+  .tab:hover { transform: translateY(-1px); }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .wiki-nav {
+    text-align: center;
+    margin: 18px auto 0;
+    padding: 0 20px;
+    font-size: .9rem;
+    color: var(--muted);
+  }
+  .wiki-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    transition: transform .12s ease;
+  }
+  .wiki-link:hover { transform: translateY(-1px); }
+
+  .search-hint {
+    max-width: 920px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    text-align: center;
+    font-size: .84rem;
+    color: var(--muted);
+  }
+
+  .topic-intro {
+    max-width: 920px;
+    margin: 0 auto 26px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--ink);
+    font-size: .92rem;
+    line-height: 1.5;
+  }
+
+  main { max-width: 960px; margin: 0 auto; padding: 20px; }
+
+  .category { margin-bottom: 40px; }
+  .category h2 {
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid var(--accent-soft);
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+  .category h2 .emoji { font-size: 1.4rem; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    transition: transform .12s ease;
+  }
+  .card:hover { transform: translateY(-2px); }
+  .card h3 { margin: 0 0 6px; font-size: 1.02rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .92rem; }
+  .card .tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .card .tag {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .no-results { text-align: center; color: var(--muted); display: none; padding: 40px; }
+
+  /* Glossar-Tooltips */
+  .term {
+    border-bottom: 1px dotted var(--accent);
+    cursor: help;
+    position: relative;
+    color: inherit;
+  }
+  .term:focus { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  .term::after {
+    content: attr(data-def);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 260px;
+    background: #2b2b2b;
+    color: #fff;
+    text-align: left;
+    font-size: .8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 9px 12px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .12s ease;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .term::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #2b2b2b;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .12s ease;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .term:hover::after, .term:focus::after,
+  .term:hover::before, .term:focus::before {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: .82rem;
+    padding: 30px 20px 50px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="heart">🥗</div>
+  <h1>Früchte &amp; Gemüse</h1>
+  <p>Was drinsteckt (Vitamine, Mineralstoffe &amp; Co.) und wofür es gut ist — übersichtlich und durchsuchbar.</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-topic="fruechte">🍎 Früchte</button>
+  <button class="tab" data-topic="gemuese">🥦 Gemüse</button>
+</div>
+
+<div class="wiki-nav">
+  <a class="wiki-link" href="../amars/">← Übersicht</a>
+</div>
+
+<div class="search-wrap">
+  <input id="search" type="search" placeholder="Suche nach Organ, Beschwerde oder Nährstoff… (z. B. Magen, Augen, Vitamin C)" aria-label="Suchen">
+</div>
+<div class="search-hint">Die Suche durchsucht <strong>Früchte und Gemüse gleichzeitig</strong> — probiere „Magen“, „Immunsystem“ oder „Kalium“.</div>
+
+<main id="content">
+
+  <!-- ============ FRÜCHTE ============ -->
+  <div class="topic-intro" data-topic="fruechte">
+    <strong>Früchte</strong> liefern vor allem Vitamine, Antioxidantien und Ballaststoffe. Tipp: Gib oben eine Beschwerde, ein Organ oder einen Nährstoff ein — die Suche zeigt passende Früchte <em>und</em> Gemüse.
+  </div>
+
+  <section class="category" data-topic="fruechte" data-cat="Früchte">
+    <h2><span class="emoji">🍎</span> Früchte</h2>
+    <div class="grid">
+      <div class="card"><h3>Apfel</h3><p>Reich an Ballaststoffen (Pektin) und Vitamin C. Gut für Verdauung, Darm, Herz und einen stabilen Blutzucker.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Herz</span></div></div>
+      <div class="card"><h3>Banane</h3><p>Viel Kalium, Vitamin B6 und Magnesium. Gut für Muskeln, Herz, Blutdruck und ist schonend für den Magen.</p><div class="tags"><span class="tag">Muskeln</span><span class="tag">Herz</span><span class="tag">Magen</span></div></div>
+      <div class="card"><h3>Orange</h3><p>Sehr viel Vitamin C plus Folsäure und Kalium. Gut für Immunsystem, Haut und die Gefäße.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Zitrone</h3><p>Hoher Vitamin C-Gehalt. Gut für Immunsystem, Verdauung und die Eisenaufnahme.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Grapefruit</h3><p>Vitamin C und Antioxidantien. Gut für Immunsystem, Herz und den Stoffwechsel.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Stoffwechsel</span></div></div>
+      <div class="card"><h3>Mandarine</h3><p>Vitamin C und Ballaststoffe. Gut für Immunsystem und Haut.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Erdbeeren</h3><p>Vitamin C, Mangan und Antioxidantien. Gut für Immunsystem, Haut und Herz.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Herz</span></div></div>
+      <div class="card"><h3>Heidelbeeren</h3><p>Anthocyane sowie Vitamin C und Vitamin K. Gut für Gehirn, Augen, Gedächtnis und Herz.</p><div class="tags"><span class="tag">Gehirn</span><span class="tag">Augen</span><span class="tag">Herz</span></div></div>
+      <div class="card"><h3>Himbeeren</h3><p>Viele Ballaststoffe und Vitamin C. Gut für Verdauung und Immunsystem.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Immunsystem</span></div></div>
+      <div class="card"><h3>Brombeeren</h3><p>Vitamin C und Vitamin K plus Antioxidantien. Gut für Immunsystem und Knochen.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Knochen</span></div></div>
+      <div class="card"><h3>Schwarze Johannisbeere</h3><p>Extrem viel Vitamin C. Gut für Immunsystem und die Gefäße.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Gefäße</span></div></div>
+      <div class="card"><h3>Trauben</h3><p>Resveratrol, Kalium und Antioxidantien. Gut für Herz und Gefäße.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Gefäße</span></div></div>
+      <div class="card"><h3>Kiwi</h3><p>Sehr viel Vitamin C, dazu Vitamin K und Ballaststoffe. Gut für Immunsystem, Verdauung und Haut.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Ananas</h3><p>Vitamin C und das Enzym Bromelain. Gut für Verdauung und gegen Entzündungen.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Entzündungen</span></div></div>
+      <div class="card"><h3>Mango</h3><p>Viel Vitamin A und Vitamin C. Gut für Augen, Haut und Immunsystem.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Papaya</h3><p>Vitamin C, Beta-Carotin und das Enzym Papain. Gut für Verdauung, Magen und Haut.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Magen</span></div></div>
+      <div class="card"><h3>Wassermelone</h3><p>Viel Wasser, Lycopin und Vitamin C. Gut für den Flüssigkeitshaushalt, Herz und Haut.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Honigmelone</h3><p>Beta-Carotin und Vitamin C. Gut für Augen, Haut und Immunsystem.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Pfirsich</h3><p>Vitamin C, Vitamin A und Kalium. Gut für Haut, Augen und Verdauung.</p><div class="tags"><span class="tag">Haut</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Aprikose</h3><p>Beta-Carotin, Kalium und Eisen. Gut für Augen, Haut und die Blutbildung.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Blut</span></div></div>
+      <div class="card"><h3>Pflaume</h3><p>Ballaststoffe und Sorbit. Gut für Verdauung und einen trägen Darm.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Darm</span></div></div>
+      <div class="card"><h3>Birne</h3><p>Ballaststoffe und Vitamin C. Gut für Verdauung, Darm und ist magenschonend.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Magen</span></div></div>
+      <div class="card"><h3>Kirsche</h3><p>Antioxidantien und Melatonin. Gut für Schlaf, Gelenke und gegen Entzündungen.</p><div class="tags"><span class="tag">Schlaf</span><span class="tag">Gelenke</span></div></div>
+      <div class="card"><h3>Granatapfel</h3><p>Viele Polyphenole und Vitamin C. Gut für Herz, Gefäße und gegen Entzündungen.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Entzündungen</span></div></div>
+      <div class="card"><h3>Feige</h3><p>Ballaststoffe, Kalzium und Kalium. Gut für Verdauung und Knochen.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Knochen</span></div></div>
+      <div class="card"><h3>Dattel</h3><p>Viele Ballaststoffe, Kalium und Eisen. Gut für Energie, Verdauung und die Blutbildung.</p><div class="tags"><span class="tag">Energie</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Avocado</h3><p>Gesunde Fette, Kalium und Vitamin E. Gut für Herz, Haut und Gehirn.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Cranberry</h3><p>Antioxidantien und Vitamin C. Gut für Harnwege, Blase und Immunsystem.</p><div class="tags"><span class="tag">Blase</span><span class="tag">Harnwege</span></div></div>
+      <div class="card"><h3>Maracuja</h3><p>Vitamin C, Vitamin A und Ballaststoffe. Gut für Immunsystem und Verdauung.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Guave</h3><p>Extrem viel Vitamin C und Ballaststoffe. Gut für Immunsystem und Verdauung.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Verdauung</span></div></div>
+    </div>
+  </section>
+
+  <!-- ============ GEMÜSE ============ -->
+  <div class="topic-intro" data-topic="gemuese">
+    <strong>Gemüse</strong> punktet mit Mineralstoffen, Ballaststoffen und sekundären Pflanzenstoffen. Auch hier funktioniert die Suche nach Organ, Beschwerde oder Nährstoff.
+  </div>
+
+  <section class="category" data-topic="gemuese" data-cat="Gemüse">
+    <h2><span class="emoji">🥦</span> Gemüse</h2>
+    <div class="grid">
+      <div class="card"><h3>Brokkoli</h3><p>Vitamin C, Vitamin K, Folsäure und Sulforaphan. Gut für Immunsystem, Knochen, Verdauung und den Zellschutz.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Knochen</span></div></div>
+      <div class="card"><h3>Blumenkohl</h3><p>Vitamin C und Ballaststoffe. Gut für Verdauung und Immunsystem.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Immunsystem</span></div></div>
+      <div class="card"><h3>Rosenkohl</h3><p>Viel Vitamin C und Vitamin K plus Ballaststoffe. Gut für Immunsystem, Knochen und Verdauung.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Weißkohl</h3><p>Vitamin C, Vitamin K und Ballaststoffe. Gut für Verdauung, Magen und Immunsystem.</p><div class="tags"><span class="tag">Magen</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Rotkohl</h3><p>Anthocyane sowie Vitamin C und Vitamin K. Gut für Herz, Immunsystem und Verdauung.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Grünkohl</h3><p>Sehr viel Vitamin K, Vitamin C und Vitamin A plus Kalzium. Gut für Knochen, Augen und Herz.</p><div class="tags"><span class="tag">Knochen</span><span class="tag">Augen</span></div></div>
+      <div class="card"><h3>Spinat</h3><p>Eisen, Vitamin K, Vitamin A, Folsäure und Magnesium. Gut für Blut, Knochen, Augen und Muskeln.</p><div class="tags"><span class="tag">Blut</span><span class="tag">Augen</span></div></div>
+      <div class="card"><h3>Mangold</h3><p>Vitamin K, Vitamin A, Magnesium und Eisen. Gut für Knochen, Augen und die Blutbildung.</p><div class="tags"><span class="tag">Knochen</span><span class="tag">Blut</span></div></div>
+      <div class="card"><h3>Rucola</h3><p>Vitamin K, Folsäure und Nitrate. Gut für Knochen und Blutdruck.</p><div class="tags"><span class="tag">Knochen</span><span class="tag">Blutdruck</span></div></div>
+      <div class="card"><h3>Feldsalat</h3><p>Vitamin C, Eisen und Folsäure. Gut für Blut und Immunsystem.</p><div class="tags"><span class="tag">Blut</span><span class="tag">Immunsystem</span></div></div>
+      <div class="card"><h3>Kopfsalat</h3><p>Viel Wasser, Folsäure und Vitamin K. Leicht verdaulich und gut für die Verdauung.</p><div class="tags"><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Karotte</h3><p>Sehr viel Beta-Carotin (Vitamin A). Gut für Augen, Haut und Immunsystem.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Tomate</h3><p>Lycopin, Vitamin C und Kalium. Gut für Herz, Haut und Prostata.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Paprika (rot)</h3><p>Extrem viel Vitamin C und Vitamin A. Gut für Immunsystem, Haut und Augen.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Augen</span></div></div>
+      <div class="card"><h3>Gurke</h3><p>Viel Wasser und Vitamin K. Gut für den Flüssigkeitshaushalt und die Haut.</p><div class="tags"><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Zucchini</h3><p>Vitamin C, Kalium und Ballaststoffe. Gut für Verdauung und Herz.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Herz</span></div></div>
+      <div class="card"><h3>Aubergine</h3><p>Ballaststoffe und Antioxidantien. Gut für Herz und Verdauung.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Kürbis</h3><p>Beta-Carotin, Vitamin C und Kalium. Gut für Augen, Haut und Immunsystem.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Haut</span></div></div>
+      <div class="card"><h3>Süßkartoffel</h3><p>Viel Beta-Carotin, Vitamin C, Kalium und Ballaststoffe. Gut für Augen, Immunsystem und Verdauung.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Kartoffel</h3><p>Kalium, Vitamin C und Vitamin B6. Gut für Blutdruck, Energie und gekocht magenschonend.</p><div class="tags"><span class="tag">Magen</span><span class="tag">Blutdruck</span></div></div>
+      <div class="card"><h3>Rote Bete</h3><p>Nitrate, Folsäure und Eisen. Gut für Blutdruck, Ausdauer und die Blutbildung.</p><div class="tags"><span class="tag">Blutdruck</span><span class="tag">Blut</span></div></div>
+      <div class="card"><h3>Zwiebel</h3><p>Quercetin, Schwefelverbindungen und Vitamin C. Gut für Herz, Immunsystem und gegen Entzündungen.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Immunsystem</span></div></div>
+      <div class="card"><h3>Knoblauch</h3><p>Allicin und Vitamin C. Gut für Herz, Blutdruck und die Abwehr.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Immunsystem</span></div></div>
+      <div class="card"><h3>Lauch</h3><p>Vitamin K, Vitamin C und Präbiotika. Gut für Herz und Verdauung.</p><div class="tags"><span class="tag">Herz</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Sellerie</h3><p>Viel Wasser, Vitamin K und Kalium. Gut für Blutdruck, Verdauung und wirkt entwässernd.</p><div class="tags"><span class="tag">Blutdruck</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Spargel</h3><p>Folsäure, Vitamin K, Ballaststoffe und Inulin. Gut für Verdauung, Darm und wirkt entwässernd.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Darm</span></div></div>
+      <div class="card"><h3>Fenchel</h3><p>Ballaststoffe, Vitamin C und Anethol. Gut für Magen, Verdauung und gegen Blähungen.</p><div class="tags"><span class="tag">Magen</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Erbsen</h3><p>Pflanzliches Protein, Ballaststoffe und Vitamin C. Gut für Muskeln und Verdauung.</p><div class="tags"><span class="tag">Muskeln</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Grüne Bohnen</h3><p>Vitamin C, Vitamin K und Ballaststoffe. Gut für Knochen und Verdauung.</p><div class="tags"><span class="tag">Knochen</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Mais</h3><p>Ballaststoffe plus Lutein. Gut für Augen und Verdauung.</p><div class="tags"><span class="tag">Augen</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Sauerkraut</h3><p>Probiotika und Vitamin C. Gut für Darm, Verdauung und Immunsystem.</p><div class="tags"><span class="tag">Darm</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Ingwer</h3><p>Der Scharfstoff Gingerol. Gut für Magen, gegen Übelkeit, Entzündungen und die Abwehr.</p><div class="tags"><span class="tag">Magen</span><span class="tag">Übelkeit</span></div></div>
+      <div class="card"><h3>Radieschen</h3><p>Vitamin C und Senföle. Gut für Verdauung und die Leber.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Leber</span></div></div>
+      <div class="card"><h3>Rettich</h3><p>Senföle und Vitamin C. Gut für Verdauung, Atemwege und die Leber.</p><div class="tags"><span class="tag">Verdauung</span><span class="tag">Atemwege</span></div></div>
+      <div class="card"><h3>Artischocke</h3><p>Ballaststoffe und der Bitterstoff Cynarin. Gut für Leber, Galle, Verdauung und den Cholesterinspiegel.</p><div class="tags"><span class="tag">Leber</span><span class="tag">Verdauung</span></div></div>
+      <div class="card"><h3>Champignons</h3><p>B-Vitamine, Vitamin D und Selen. Gut für Immunsystem und Nerven.</p><div class="tags"><span class="tag">Immunsystem</span><span class="tag">Nerven</span></div></div>
+      <div class="card"><h3>Chili</h3><p>Capsaicin und viel Vitamin C. Gut für Stoffwechsel, Kreislauf und Immunsystem.</p><div class="tags"><span class="tag">Stoffwechsel</span><span class="tag">Immunsystem</span></div></div>
+    </div>
+  </section>
+
+  <p class="no-results" id="noResults">Keine Einträge entsprechen deiner Suche.</p>
+
+</main>
+
+<footer>
+  Privat &amp; unlistet · Allgemeine Orientierung, keine medizinische Beratung.
+</footer>
+
+<script>
+  // ---- Glossar: Nährstoff/Pflanzenstoff -> Erklärung ----
+  const glossar = {
+    "Vitamin C": "Stärkt das Immunsystem, wirkt als Antioxidans und fördert Haut, Gefäße und Wundheilung.",
+    "Vitamin A": "Wichtig für Sehkraft und Augen, gesunde Haut und das Immunsystem.",
+    "Vitamin K": "Wichtig für die Blutgerinnung und starke Knochen.",
+    "Vitamin E": "Fettlösliches Antioxidans, das Zellen und Haut schützt.",
+    "Vitamin B6": "Unterstützt Nerven, Stoffwechsel und die Bildung roter Blutkörperchen.",
+    "B-Vitamine": "Gruppe von Vitaminen für Energiestoffwechsel und Nervensystem.",
+    "Vitamin D": "Wichtig für Knochen, die Kalziumaufnahme und das Immunsystem.",
+    "Beta-Carotin": "Orange-roter Pflanzenfarbstoff, den der Körper in Vitamin A umwandelt — gut für Augen und Haut.",
+    "Folsäure": "B-Vitamin (B9) für Zellteilung und Blutbildung, besonders in der Schwangerschaft wichtig.",
+    "Kalium": "Mineralstoff, der den Blutdruck reguliert und Muskeln sowie Nerven unterstützt.",
+    "Magnesium": "Mineralstoff für Muskeln, Nerven und den Energiestoffwechsel.",
+    "Kalzium": "Mineralstoff für Knochen, Zähne und die Muskelfunktion.",
+    "Eisen": "Mineralstoff für den Sauerstofftransport im Blut — beugt Müdigkeit und Blutarmut vor.",
+    "Selen": "Spurenelement mit antioxidativer Wirkung, unterstützt Immunsystem und Schilddrüse.",
+    "Mangan": "Spurenelement für Knochen, Stoffwechsel und Zellschutz.",
+    "Ballaststoffe": "Unverdauliche Pflanzenfasern, die Verdauung und Darm fördern und satt machen.",
+    "Ballaststoffen": "Unverdauliche Pflanzenfasern, die Verdauung und Darm fördern und satt machen.",
+    "Pektin": "Löslicher Ballaststoff (z. B. im Apfel), der die Verdauung reguliert und Cholesterin binden kann.",
+    "Antioxidantien": "Stoffe, die Zellen vor Schäden durch freie Radikale schützen.",
+    "Anthocyane": "Blau-violette Pflanzenfarbstoffe mit starker antioxidativer Wirkung (z. B. in Beeren).",
+    "Lycopin": "Roter Pflanzenfarbstoff (Tomaten), gut für Herz und Haut.",
+    "Sulforaphan": "Pflanzenstoff aus Kohl und Brokkoli mit zellschützender Wirkung.",
+    "Quercetin": "Pflanzlicher Antioxidans-Stoff (z. B. in Zwiebeln) mit entzündungshemmender Wirkung.",
+    "Allicin": "Schwefelverbindung im Knoblauch, gut für Herz und Abwehr.",
+    "Bromelain": "Enzym in der Ananas, das die Eiweißverdauung unterstützt.",
+    "Papain": "Enzym in der Papaya, das die Verdauung von Eiweiß fördert.",
+    "Resveratrol": "Antioxidans in Trauben, das die Gefäße schützt.",
+    "Nitrate": "Werden im Körper zu Stickstoffmonoxid, das die Gefäße weitet und den Blutdruck senkt.",
+    "Probiotika": "Nützliche Bakterien (z. B. in Sauerkraut), die die Darmflora stärken.",
+    "Präbiotika": "Ballaststoffe, die den guten Darmbakterien als Nahrung dienen.",
+    "Inulin": "Präbiotischer Ballaststoff, der die Darmflora fördert.",
+    "Lutein": "Pflanzenfarbstoff, der die Augen und die Netzhaut schützt.",
+    "Capsaicin": "Scharfstoff in Chili, der Stoffwechsel und Durchblutung anregt.",
+    "Gingerol": "Scharfstoff im Ingwer, der Magen und Übelkeit beruhigt und entzündungshemmend wirkt.",
+    "Cynarin": "Bitterstoff der Artischocke, der Leber und Gallenfluss unterstützt.",
+    "Polyphenole": "Pflanzenstoffe mit antioxidativer, herzschützender Wirkung.",
+    "Senföle": "Scharfstoffe in Rettich und Radieschen, die antibakteriell wirken und die Verdauung anregen.",
+    "Anethol": "Ätherisches Öl im Fenchel, das gegen Blähungen und Magenbeschwerden hilft.",
+    "Sorbit": "Natürlicher Zuckeralkohol (z. B. in Pflaumen), der mild abführend wirkt.",
+    "Melatonin": "Körpereigenes Schlafhormon, das auch in Kirschen vorkommt.",
+    "Schwefelverbindungen": "Pflanzenstoffe in Zwiebeln und Knoblauch mit herzschützender, antibakterieller Wirkung."
+  };
+
+  const begriffe = Object.keys(glossar).sort((a, b) => b.length - a.length);
+
+  function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function markiere(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    const textNodes = [];
+    let n;
+    while ((n = walker.nextNode())) textNodes.push(n);
+
+    textNodes.forEach(node => {
+      if (node.parentNode.classList && node.parentNode.classList.contains('term')) return;
+      let text = node.nodeValue;
+      for (const begriff of begriffe) {
+        const re = new RegExp('(^|[^\\wäöüÄÖÜß-])(' + escapeRegExp(begriff) + ')(?![\\wäöüÄÖÜß-])');
+        if (re.test(text)) {
+          const frag = document.createDocumentFragment();
+          const idx = text.search(re);
+          const m = text.match(re);
+          const pre = text.slice(0, idx + m[1].length);
+          const after = text.slice(idx + m[1].length + begriff.length);
+          if (pre) frag.appendChild(document.createTextNode(pre));
+          const t = document.createElement('span');
+          t.className = 'term';
+          t.setAttribute('tabindex', '0');
+          t.setAttribute('data-def', glossar[begriff]);
+          t.textContent = begriff;
+          frag.appendChild(t);
+          if (after) frag.appendChild(document.createTextNode(after));
+          node.parentNode.replaceChild(frag, node);
+          return;
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll('.card p').forEach(el => {
+    for (let i = 0; i < 8; i++) markiere(el);
+  });
+
+  const search = document.getElementById('search');
+  const categories = Array.from(document.querySelectorAll('.category'));
+  const intros = Array.from(document.querySelectorAll('.topic-intro'));
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const noResults = document.getElementById('noResults');
+
+  const topicOf = el => el.dataset.topic || 'fruechte';
+  let activeTopic = 'fruechte';
+
+  function applyFilters() {
+    const q = search.value.trim().toLowerCase();
+    const searching = q.length > 0;
+    let anyVisible = false;
+
+    categories.forEach(cat => {
+      // Beim Suchen alle Themen durchsuchen; ohne Suche nur das aktive Thema
+      if (!searching && topicOf(cat) !== activeTopic) { cat.style.display = 'none'; return; }
+      let catVisible = false;
+      cat.querySelectorAll('.card').forEach(card => {
+        const match = card.textContent.toLowerCase().includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) { catVisible = true; anyVisible = true; }
+      });
+      cat.style.display = catVisible ? '' : 'none';
+    });
+
+    intros.forEach(intro => {
+      intro.style.display = (topicOf(intro) === activeTopic && !searching) ? '' : 'none';
+    });
+
+    noResults.style.display = anyVisible ? 'none' : 'block';
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      activeTopic = tab.dataset.topic;
+      tabs.forEach(t => t.classList.toggle('active', t === tab));
+      applyFilters();
+    });
+  });
+
+  search.addEventListener('input', applyFilters);
+
+  applyFilters();
+</script>
+</body>
+</html>
