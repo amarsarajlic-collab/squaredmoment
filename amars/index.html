@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Amars Wiki</title>
+<style>
+  :root {
+    --bg: #fbf7f4;
+    --card: #ffffff;
+    --ink: #2b2b2b;
+    --muted: #6b6b6b;
+    --border: #ece4df;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.05);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    text-align: center;
+    padding: 60px 20px 20px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  header .mark { font-size: 46px; line-height: 1; }
+  h1 { font-size: 2.1rem; margin: 14px 0 6px; letter-spacing: -0.5px; }
+  header p { color: var(--muted); margin: 0 auto; max-width: 520px; }
+
+  main { flex: 1; max-width: 920px; margin: 0 auto; padding: 24px 20px 40px; width: 100%; }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .tile {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 26px 24px;
+    box-shadow: var(--shadow);
+    transition: transform .14s ease, box-shadow .14s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .tile::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--accent, #c0392b);
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 10px rgba(0,0,0,.08), 0 16px 40px rgba(0,0,0,.10);
+  }
+  .tile .emoji { font-size: 2.2rem; line-height: 1; }
+  .tile h2 { margin: 14px 0 6px; font-size: 1.25rem; }
+  .tile p { margin: 0; color: var(--muted); font-size: .93rem; }
+  .tile .topics {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tile .topic {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    color: var(--accent, #c0392b);
+    background: var(--accent-soft, #fbe9e7);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .tile .go {
+    margin-top: 18px;
+    font-weight: 600;
+    color: var(--accent, #c0392b);
+    font-size: .92rem;
+  }
+
+  /* Farbakzente je Kachel */
+  .tile.herz { --accent: #c0392b; --accent-soft: #fbe9e7; }
+  .tile.maenner { --accent: #2e6f5e; --accent-soft: #e4f0ec; }
+
+  /* Platzhalter-Kachel für künftige Themen */
+  .tile.soon {
+    background: transparent;
+    border-style: dashed;
+    box-shadow: none;
+    cursor: default;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--muted);
+    min-height: 180px;
+  }
+  .tile.soon::before { display: none; }
+  .tile.soon:hover { transform: none; box-shadow: none; }
+  .tile.soon .emoji { font-size: 1.8rem; opacity: .5; }
+  .tile.soon p { margin-top: 8px; }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: .8rem;
+    padding: 20px 20px 40px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="mark">🗂️</div>
+  <h1>Amars Wiki</h1>
+  <p>Meine private Gesundheits-Sammlung. Wähle eine Kategorie.</p>
+</header>
+
+<main>
+  <div class="tiles">
+
+    <a class="tile herz" href="../gesundheit/">
+      <span class="emoji">❤️</span>
+      <h2>Herz &amp; Abnehmen</h2>
+      <p>Herzgesunde Lebensmittel, Tees und Nahrungsergänzungsmittel — plus Zutaten, die beim Abnehmen helfen.</p>
+      <div class="topics">
+        <span class="topic">Herzgesundheit</span>
+        <span class="topic">Abnehmen</span>
+      </div>
+      <div class="go">Öffnen →</div>
+    </a>
+
+    <a class="tile maenner" href="../maennergesundheit/">
+      <span class="emoji">💪</span>
+      <h2>Männergesundheit</h2>
+      <p>Alles für Hoden &amp; Testosteron, Spermienqualität und Prostata — inklusive Lebensstil-Tipps.</p>
+      <div class="topics">
+        <span class="topic">Testosteron</span>
+        <span class="topic">Spermien</span>
+        <span class="topic">Prostata</span>
+      </div>
+      <div class="go">Öffnen →</div>
+    </a>
+
+    <div class="tile soon">
+      <span class="emoji">➕</span>
+      <p>Weitere Kategorien folgen</p>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Privat &amp; unlistet · Nur als allgemeine Orientierung gedacht, keine medizinische Beratung.
+</footer>
+</body>
+</html>
