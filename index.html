@@ -11,7 +11,7 @@
 <link rel="icon" href="logo/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="logo/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="logo/apple-touch-icon-180.png">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -74,10 +74,51 @@
   </div>
 </section>
 
-<section class="gallery gallery--soon" id="gallery">
+<section class="gallery" id="gallery">
   <div class="section-header reveal">
     <p class="section-eyebrow">Portfolio</p>
-    <h2>Galerie bald verfügbar</h2>
+    <h2>Galerie</h2>
+  </div>
+
+  <div class="filters reveal" id="filters">
+    <button class="filter active" data-filter="all">Alle</button>
+    <button class="filter" data-filter="street">Street</button>
+    <button class="filter" data-filter="architektur">Architektur</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="images/portfolio/street-shibuya-thumb.jpg" data-full="images/portfolio/street-shibuya.jpg" alt="Shibuya-Kreuzung bei Nacht" loading="lazy">
+      <figcaption>Shibuya bei Nacht</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="architektur">
+      <img src="images/portfolio/arch-skyline-thumb.jpg" data-full="images/portfolio/arch-skyline.jpg" alt="Tokyo Skyline von oben bei Nacht" loading="lazy">
+      <figcaption>Tokyo von oben</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="images/portfolio/street-lantern-thumb.jpg" data-full="images/portfolio/street-lantern.jpg" alt="Rote Yakitori-Laterne in einer Gasse" loading="lazy">
+      <figcaption>Yakitori-Laterne</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="images/portfolio/street-train-thumb.jpg" data-full="images/portfolio/street-train.jpg" alt="Fahrender Zug bei Nacht mit Bewegungsunschärfe" loading="lazy">
+      <figcaption>Nachtzug</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="images/portfolio/street-cafe-thumb.jpg" data-full="images/portfolio/street-cafe.jpg" alt="Café mit vorbeigehenden Passanten" loading="lazy">
+      <figcaption>Straßencafé</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="architektur">
+      <img src="images/portfolio/arch-shinjuku-thumb.jpg" data-full="images/portfolio/arch-shinjuku.jpg" alt="Shinjuku Fassaden im Abendlicht mit Flugzeug" loading="lazy">
+      <figcaption>Shinjuku im Abendlicht</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="images/portfolio/street-izakaya-thumb.jpg" data-full="images/portfolio/street-izakaya.jpg" alt="Beleuchtete Izakaya-Ecke bei Nacht" loading="lazy">
+      <figcaption>Izakaya-Ecke</figcaption>
+    </figure>
+    <figure class="grid__item reveal" data-cat="street">
+      <img src="images/portfolio/street-platform-thumb.jpg" data-full="images/portfolio/street-platform.jpg" alt="Bahnbeamter auf einem Bahnsteig in Tokyo" loading="lazy">
+      <figcaption>Am Bahnsteig</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -109,6 +150,6 @@
   <p class="lightbox__caption" id="lightboxCaption"></p>
 </div>
 
-<script src="script.js?v=2"></script>
+<script src="script.js?v=3"></script>
 </body>
 </html>

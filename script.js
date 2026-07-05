@@ -74,7 +74,7 @@ function openLightbox(item) {
 function showImage() {
   const item = visibleItems[currentIndex];
   const img = item.querySelector('img');
-  lightboxImg.src = img.src.replace(/\/\d+\/\d+$/, '/1600/1100');
+  lightboxImg.src = img.dataset.full || img.src;
   lightboxImg.alt = img.alt;
   lightboxCaption.textContent = item.querySelector('figcaption').textContent;
 }
