@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<title>DIY kalkulator materijala · Squared Moments</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #eef1f4;
+    --paper-raised: #f7f9fb;
+    --grid: rgba(58, 92, 128, 0.10);
+    --line: #c3ccd6;
+    --ink: #1d2733;
+    --ink-soft: #55647a;
+    --accent: #d95d1e;
+    --accent-ink: #ffffff;
+    --dim: #3a5c80;
+    --result-bg: #1d2733;
+    --result-ink: #f2f5f8;
+    --result-soft: #93a3b8;
+    --focus: #2f6bb0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #101822;
+      --paper-raised: #17212e;
+      --grid: rgba(140, 170, 205, 0.08);
+      --line: #2c3a4c;
+      --ink: #e4eaf2;
+      --ink-soft: #8fa0b5;
+      --accent: #ec6f2d;
+      --accent-ink: #14100c;
+      --dim: #7fa3c8;
+      --result-bg: #0a1017;
+      --result-ink: #eef3f9;
+      --result-soft: #7d8fa6;
+      --focus: #6ea3dd;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #eef1f4;
+    --paper-raised: #f7f9fb;
+    --grid: rgba(58, 92, 128, 0.10);
+    --line: #c3ccd6;
+    --ink: #1d2733;
+    --ink-soft: #55647a;
+    --accent: #d95d1e;
+    --accent-ink: #ffffff;
+    --dim: #3a5c80;
+    --result-bg: #1d2733;
+    --result-ink: #f2f5f8;
+    --result-soft: #93a3b8;
+    --focus: #2f6bb0;
+  }
+  :root[data-theme="dark"] {
+    --paper: #101822;
+    --paper-raised: #17212e;
+    --grid: rgba(140, 170, 205, 0.08);
+    --line: #2c3a4c;
+    --ink: #e4eaf2;
+    --ink-soft: #8fa0b5;
+    --accent: #ec6f2d;
+    --accent-ink: #14100c;
+    --dim: #7fa3c8;
+    --result-bg: #0a1017;
+    --result-ink: #eef3f9;
+    --result-soft: #7d8fa6;
+    --focus: #6ea3dd;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    line-height: 1.5;
+  }
+  .display {
+    font-family: "Helvetica Neue Condensed", "Arial Narrow", "Avenir Next Condensed", -apple-system, sans-serif;
+    font-stretch: condensed;
+    letter-spacing: 0.01em;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  header h1 {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  header .rev {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-soft);
+  }
+  .seg { display: inline-flex; margin-left: auto; border: 1px solid var(--line); align-self: center; }
+  .seg button {
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .tagline { margin: 0 0 26px; color: var(--ink-soft); max-width: 62ch; }
+
+  .layout { display: grid; grid-template-columns: 205px 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } }
+
+  nav { display: flex; flex-direction: column; gap: 2px; position: sticky; top: 16px; }
+  @media (max-width: 760px) { nav { flex-direction: row; flex-wrap: wrap; position: static; } }
+  nav button {
+    font: inherit;
+    text-align: left;
+    padding: 9px 12px;
+    border: 1px solid transparent;
+    border-left: 3px solid var(--line);
+    background: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  nav button:hover { color: var(--ink); border-left-color: var(--ink-soft); }
+  nav button[aria-selected="true"] {
+    color: var(--ink);
+    border-left-color: var(--accent);
+    background: var(--paper-raised);
+  }
+  nav button:focus-visible, .seg button:focus-visible {
+    outline: 2px solid var(--focus); outline-offset: 1px;
+  }
+
+  section[role="tabpanel"] { display: none; }
+  section[role="tabpanel"].active { display: block; }
+
+  .card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    padding: 22px 24px 26px;
+  }
+  .card h2 {
+    margin: 0 0 2px;
+    font-size: 1.45rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .card .sub { margin: 0 0 20px; color: var(--ink-soft); font-size: 0.92rem; max-width: 58ch; }
+
+  .calc-grid { display: grid; grid-template-columns: minmax(230px, 1fr) minmax(200px, 260px); gap: 24px 32px; }
+  @media (max-width: 620px) { .calc-grid { grid-template-columns: 1fr; } }
+
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; align-content: start; }
+  .fields .full { grid-column: 1 / -1; }
+  label.field { display: flex; flex-direction: column; gap: 5px; }
+  label.field span.lbl {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .field .unitbox { display: flex; align-items: stretch; border: 1px solid var(--line); background: var(--paper); }
+  .field .unitbox:focus-within { border-color: var(--focus); }
+  .field input, .field select {
+    font: inherit;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    border: none;
+    background: none;
+    color: var(--ink);
+    padding: 8px 10px;
+    width: 100%;
+    min-width: 0;
+  }
+  .field input:focus, .field select:focus { outline: none; }
+  .field .unit {
+    display: flex; align-items: center;
+    padding: 0 9px;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    border-left: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .field select { appearance: auto; font-family: inherit; }
+
+  .diagram { align-self: start; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+  .diagram .cap {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  .result {
+    grid-column: 1 / -1;
+    background: var(--result-bg);
+    color: var(--result-ink);
+    padding: 18px 22px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 32px;
+    align-items: baseline;
+  }
+  @media (max-width: 620px) { .result { grid-template-columns: 1fr; } }
+  .result .headline { font-size: 2.3rem; font-weight: 800; line-height: 1.1; }
+  .result .headline small { font-size: 1.1rem; font-weight: 600; color: var(--result-soft); margin-left: 4px; }
+  .result .breakdown { color: var(--result-soft); font-size: 0.88rem; }
+  .result .breakdown b { color: var(--result-ink); font-weight: 600; }
+  .result .breakdown div { padding: 1px 0; }
+  .result .breakdown .costline {
+    font-size: 1.15rem;
+    margin-bottom: 7px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  }
+  .result .breakdown .costline b { font-weight: 800; }
+  .result .accent { color: var(--accent); }
+
+  .note { margin-top: 14px; font-size: 0.8rem; color: var(--ink-soft); max-width: 70ch; }
+  .note::before { content: "※ "; color: var(--accent); }
+
+  svg text { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: var(--dim); }
+  svg .shape { fill: none; stroke: var(--ink-soft); stroke-width: 1.5; }
+  svg .fillshape { fill: var(--grid); stroke: var(--ink-soft); stroke-width: 1.5; }
+  svg .dimline { stroke: var(--dim); stroke-width: 1; }
+  svg .accent-stroke { stroke: var(--accent); stroke-width: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 class="display" id="site-title"></h1>
+    <span class="rev mono" id="site-rev"></span>
+    <div class="seg" role="group" aria-label="Jezik / Sprache">
+      <button type="button" id="lang-bs" aria-pressed="true">BA</button>
+      <button type="button" id="lang-de" aria-pressed="false">DE</button>
+    </div>
+  </header>
+  <p class="tagline" id="site-tagline"></p>
+
+  <div class="layout">
+    <nav role="tablist" aria-label="Kalkulatori" id="tabs"></nav>
+    <main id="panels"></main>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ---------- state ----------
+let LANG = "bs";
+// bs-BA renders English-style separators in some engines; hr-HR matches
+// Bosnian convention (dot thousands, comma decimal) and is reliably supported.
+const LOCALE = { bs: "hr-HR", de: "de-DE" };
+
+// ---------- helpers ----------
+const fmt = (n, d = 2) => Number.isFinite(n)
+  ? n.toLocaleString(LOCALE[LANG], { maximumFractionDigits: d })
+  : "—";
+const int = (n) => Number.isFinite(n) ? n.toLocaleString(LOCALE[LANG]) : "—";
+const money = (n) => Number.isFinite(n)
+  ? n.toLocaleString(LOCALE[LANG], { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " KM"
+  : "—";
+const num = (el) => { const v = parseFloat(el.value); return Number.isFinite(v) && v >= 0 ? v : NaN; };
+
+// dimension line + centered label
+function dim(x1, y1, x2, y2, label) {
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  const vert = Math.abs(x2 - x1) < Math.abs(y2 - y1);
+  const tx = vert ? mx - 6 : mx, ty = vert ? my : my - 5;
+  const rot = vert ? `transform="rotate(-90 ${tx} ${ty})"` : "";
+  return `<line class="dimline" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>
+    <text x="${tx}" y="${ty}" text-anchor="middle" ${rot}>${label}</text>`;
+}
+
+function buildFields(list) {
+  return list.map(f => {
+    const label = f.label[LANG];
+    const fullCls = f.full ? " full" : "";
+    if (f.type === "select") {
+      const opts = f.options.map(o => `<option value="${o.value}">${o.label[LANG]}</option>`).join("");
+      return `<label class="field${fullCls || " full"}"><span class="lbl">${label}</span>
+        <span class="unitbox"><select id="${f.id}">${opts}</select></span></label>`;
+    }
+    return `<label class="field${fullCls}"><span class="lbl">${label}</span>
+      <span class="unitbox"><input type="number" id="${f.id}" value="${f.value}" min="0" step="${f.step}" inputmode="decimal"><span class="unit">${f.unit}</span></span></label>`;
+  }).join("");
+}
+
+// ---------- shared UI strings ----------
+const UI = {
+  title:   { bs: "Kalkulator materijala", de: "Materialrechner" },
+  rev:     { bs: "Rev A · metrički", de: "Rev A · metrisch" },
+  tagline: {
+    bs: "Brza procjena materijala za parcele, ploče, zidove i ograde. Vrijednosti su procjene za planiranje — pri naručivanju zaokružite naviše.",
+    de: "Schnelle Materialschätzungen für Grundstücke, Platten, Wände und Zäune. Die Werte sind Planungsschätzungen — beim Bestellen aufrunden."
+  },
+  totalCost: { bs: "procijenjeni trošak", de: "geschätzte Kosten" }
+};
+
+const materials = [
+  { value: "1.60", label: { bs: "Pijesak (suh)",  de: "Sand (trocken)" } },
+  { value: "1.50", label: { bs: "Šljunak",        de: "Kies" } },
+  { value: "1.60", label: { bs: "Drobljeni kamen", de: "Schotter" } },
+  { value: "1.30", label: { bs: "Humus",          de: "Mutterboden" } },
+  { value: "0.35", label: { bs: "Malč od kore",   de: "Rindenmulch" } },
+];
+
+// ---------- calculators ----------
+const calcs = [
+  {
+    id: "volume",
+    tab:   { bs: "Pijesak i nasip", de: "Sand & Füllung" },
+    title: { bs: "Pijesak, šljunak i nasip", de: "Sand, Kies & Füllmaterial" },
+    sub: {
+      bs: "Zapremina i težina rastresitog materijala za nasipanje pravougaone parcele do zadate dubine.",
+      de: "Volumen und Gewicht von losem Material, um ein rechteckiges Grundstück auf eine bestimmte Tiefe aufzufüllen."
+    },
+    fields: [
+      { id: "v-l", label: { bs: "Dužina parcele", de: "Grundstückslänge" }, unit: "m",  value: 10, step: 0.1 },
+      { id: "v-w", label: { bs: "Širina parcele", de: "Grundstücksbreite" }, unit: "m", value: 6,  step: 0.1 },
+      { id: "v-d", label: { bs: "Dubina nasipa",  de: "Fülltiefe" }, unit: "cm", value: 10, step: 1 },
+      { id: "v-mat", type: "select", label: { bs: "Materijal", de: "Material" }, options: materials },
+    ],
+    words: {
+      bs: { length: "dužina", width: "širina", depth: "dubina", cap: "Zapremina = D × Š × dubina",
+            area: "površina parcele", of: "", bags: "× vreće od 25 kg (rasuta isporuka je jeftinija iznad ~1 t)", lowerMat: false },
+      de: { length: "Länge", width: "Breite", depth: "Tiefe", cap: "Füllvolumen = L × B × Tiefe",
+            area: "Grundstücksfläche", of: "", bags: "× 25-kg-Säcke (Schüttgutlieferung ist ab ~1 t günstiger)", lowerMat: false }
+    },
+    note: {
+      bs: "Težina koristi tipične nasipne gustoće (pijesak ≈ 1,6 t/m³, humus ≈ 1,3 t/m³). Kod zbijanja dodajte 10–20 %.",
+      de: "Das Gewicht basiert auf typischen Schüttdichten (Sand ≈ 1,6 t/m³, Mutterboden ≈ 1,3 t/m³). Bei Verdichtung 10–20 % zugeben."
+    },
+    cost: { id: "v-price", label: { bs: "Cijena po toni", de: "Preis pro Tonne" }, unit: "KM/t", value: 40 },
+    diagram: (w) => `<svg viewBox="-42 0 340 190" role="img" aria-label="${w.cap}">
+      <polygon class="fillshape" points="60,40 220,40 190,110 30,110"/>
+      <polygon class="shape" points="30,110 190,110 190,140 30,140"/>
+      <polygon class="shape" points="190,110 220,40 220,70 190,140"/>
+      ${dim(60, 26, 220, 26, w.length)}
+      ${dim(238, 44, 238, 74, "")}
+      <text x="243" y="62" text-anchor="start">${w.width}</text>
+      ${dim(14, 110, 14, 140, "")}
+      <text x="8" y="128" text-anchor="end">${w.depth}</text>
+    </svg><div class="cap">${w.cap}</div>`,
+    compute(q, w) {
+      const L = num(q("v-l")), W = num(q("v-w")), D = num(q("v-d")) / 100;
+      const matEl = q("v-mat");
+      const density = parseFloat(matEl.value);
+      let matName = matEl.options[matEl.selectedIndex].text;
+      if (w.lowerMat) matName = matName.toLowerCase();
+      const m3 = L * W * D;
+      const tonnes = m3 * density;
+      const bags = Math.ceil((tonnes * 1000) / 25);
+      const matPhrase = `${w.of} ${matName}`.trim();
+      return {
+        headline: `${fmt(m3)}<small>m³</small>`,
+        costQty: tonnes,
+        breakdown: `
+          <div><b>${fmt(L * W)} m²</b> ${w.area}</div>
+          <div><b class="accent">≈ ${fmt(tonnes, 1)} t</b> ${matPhrase}</div>
+          <div><b>${int(bags)}</b> ${w.bags}</div>`
+      };
+    }
+  },
+  {
+    id: "concrete",
+    tab:   { bs: "Betonska ploča", de: "Betonplatte" },
+    title: { bs: "Betonska ploča", de: "Betonplatte" },
+    sub: {
+      bs: "Zapremina betona za ploču, plus okvirne količine cementa, pijeska i šljunka za standardnu mješavinu 1 : 2 : 3.",
+      de: "Betonvolumen für eine Platte, plus grobe Mengen an Zement, Sand und Kies für eine Standard-Mischung 1 : 2 : 3."
+    },
+    fields: [
+      { id: "c-l", label: { bs: "Dužina ploče", de: "Länge der Platte" }, unit: "m", value: 4, step: 0.1 },
+      { id: "c-w", label: { bs: "Širina ploče", de: "Breite der Platte" }, unit: "m", value: 3, step: 0.1 },
+      { id: "c-t", label: { bs: "Debljina",     de: "Dicke" }, unit: "cm", value: 12, step: 1 },
+    ],
+    words: {
+      bs: { length: "dužina", width: "širina", thk: "deblj.", cap: "Zapremina = D × Š × debljina",
+            order: "za naručiti uklj. 5 % otpada", cement: "× vreće cementa od 25 kg", sand: "pijesak", gravel: "šljunak" },
+      de: { length: "Länge", width: "Breite", thk: "Dicke", cap: "Plattenvolumen = L × B × Dicke",
+            order: "zu bestellen inkl. 5 % Verschnitt", cement: "× 25-kg-Zementsäcke", sand: "Sand", gravel: "Kies" }
+    },
+    note: {
+      bs: "Podaci o mješavini pretpostavljaju ≈ 300 kg cementa po m³ (klasa C20, 1:2:3 po zapremini). Za nosive elemente naručite gotov beton i pridržavajte se projekta.",
+      de: "Mischungsangaben gehen von ≈ 300 kg Zement pro m³ aus (Klasse C20, 1:2:3 nach Volumen). Für tragende Bauteile Transportbeton bestellen und die Statik beachten."
+    },
+    cost: { id: "c-price", label: { bs: "Cijena po m³ (gotov beton)", de: "Preis pro m³ (Transportbeton)" }, unit: "KM/m³", value: 130 },
+    diagram: (w) => `<svg viewBox="-36 0 336 170" role="img" aria-label="${w.cap}">
+      <polygon class="fillshape" points="55,55 215,55 185,105 25,105"/>
+      <polygon class="shape" points="25,105 185,105 185,123 25,123"/>
+      <polygon class="shape" points="185,105 215,55 215,73 185,123"/>
+      ${dim(55, 40, 215, 40, w.length)}
+      ${dim(236, 58, 236, 76, "")}
+      <text x="241" y="70" text-anchor="start">${w.width}</text>
+      ${dim(12, 105, 12, 123, "")}
+      <text x="6" y="118" text-anchor="end">${w.thk}</text>
+    </svg><div class="cap">${w.cap}</div>`,
+    compute(q, w) {
+      const m3 = num(q("c-l")) * num(q("c-w")) * (num(q("c-t")) / 100);
+      const withWaste = m3 * 1.05;
+      const cementBags = Math.ceil((withWaste * 300) / 25);
+      return {
+        headline: `${fmt(m3)}<small>m³</small>`,
+        costQty: withWaste,
+        breakdown: `
+          <div><b class="accent">${fmt(withWaste)} m³</b> ${w.order}</div>
+          <div><b>${int(cementBags)}</b> ${w.cement}</div>
+          <div><b>${fmt(withWaste * 0.5)} m³</b> ${w.sand} · <b>${fmt(withWaste * 0.75)} m³</b> ${w.gravel}</div>`
+      };
+    }
+  },
+  {
+    id: "paint",
+    tab:   { bs: "Boja", de: "Farbe" },
+    title: { bs: "Zidna boja", de: "Wandfarbe" },
+    sub: {
+      bs: "Litri boje za zidove prostorije, uzimajući u obzir otvore i više premaza.",
+      de: "Liter Farbe für die Wände eines Raums, unter Berücksichtigung von Öffnungen und mehreren Anstrichen."
+    },
+    fields: [
+      { id: "p-per",   label: { bs: "Dužina zidova (ukupno)", de: "Wandlänge (gesamt)" }, unit: "m",   value: 14,  step: 0.1 },
+      { id: "p-h",     label: { bs: "Visina zida",   de: "Wandhöhe" }, unit: "m",   value: 2.5, step: 0.05 },
+      { id: "p-open",  label: { bs: "Vrata i prozori", de: "Türen & Fenster" }, unit: "m²", value: 4, step: 0.5 },
+      { id: "p-coats", label: { bs: "Premazi",       de: "Anstriche" }, unit: "×",   value: 2,   step: 1 },
+      { id: "p-cov",   label: { bs: "Izdašnost",     de: "Ergiebigkeit" }, unit: "m²/L", value: 10, step: 0.5, full: true },
+    ],
+    words: {
+      bs: { total: "ukupna dužina zidova", height: "visina", cap: "Površina = D × V − otvori",
+            area: "površina za bojenje", coats: "premaza", tins: "× kante 2,5 L", or: "ili", big: "× kante 5 L" },
+      de: { total: "Gesamte Wandlänge", height: "Höhe", cap: "Streichfläche = L × H − Öffnungen",
+            area: "Streichfläche", coats: "Anstriche", tins: "× 2,5-L-Eimer", or: "oder", big: "× 5-L-Eimer" }
+    },
+    note: {
+      bs: "Izdašnost ovisi o boji i podlozi: ~10 m²/L za disperzivnu boju na glatkom malteru, 6–8 m²/L na hrapavim ili neimpregniranim zidovima.",
+      de: "Die Ergiebigkeit hängt von Farbe und Untergrund ab: ~10 m²/L für Dispersionsfarbe auf glattem Putz, 6–8 m²/L auf rauem oder ungrundiertem Untergrund."
+    },
+    cost: { id: "p-price", label: { bs: "Cijena po litri", de: "Preis pro Liter" }, unit: "KM/L", value: 9 },
+    diagram: (w) => `<svg viewBox="0 0 260 170" role="img" aria-label="${w.cap}">
+      <rect class="fillshape" x="35" y="40" width="190" height="95"/>
+      <rect class="shape" x="55" y="65" width="34" height="70"/>
+      <rect class="shape" x="150" y="60" width="48" height="38"/>
+      ${dim(35, 26, 225, 26, w.total)}
+      ${dim(242, 40, 242, 135, "")}
+      <text x="248" y="90" text-anchor="start" transform="rotate(-90 248 90)">${w.height}</text>
+    </svg><div class="cap">${w.cap}</div>`,
+    compute(q, w) {
+      const coats = num(q("p-coats"));
+      const area = Math.max(num(q("p-per")) * num(q("p-h")) - num(q("p-open")), 0);
+      const litres = (area * coats) / num(q("p-cov"));
+      const tins25 = Math.ceil(litres / 2.5);
+      const tins5 = Math.ceil(litres / 5);
+      return {
+        headline: `${fmt(litres, 1)}<small>L</small>`,
+        costQty: litres,
+        breakdown: `
+          <div><b>${fmt(area, 1)} m²</b> ${w.area} × <b>${fmt(coats, 0)}</b> ${w.coats}</div>
+          <div><b class="accent">${int(tins25)}</b> ${w.tins}</div>
+          <div>${w.or} <b>${int(tins5)}</b> ${w.big}</div>`
+      };
+    }
+  },
+  {
+    id: "tiles",
+    tab:   { bs: "Pločice i ploče", de: "Fliesen & Platten" },
+    title: { bs: "Pločice i ploče", de: "Fliesen & Platten" },
+    sub: {
+      bs: "Koliko pločica ili ploča prekriva površinu, uključujući dodatak za rezanje.",
+      de: "Wie viele Fliesen oder Platten eine Fläche bedecken, inklusive Verschnittzuschlag."
+    },
+    fields: [
+      { id: "t-l",  label: { bs: "Dužina površine", de: "Länge der Fläche" }, unit: "m",  value: 5,  step: 0.1 },
+      { id: "t-w",  label: { bs: "Širina površine", de: "Breite der Fläche" }, unit: "m", value: 4,  step: 0.1 },
+      { id: "t-tl", label: { bs: "Dužina pločice",  de: "Fliesenlänge" }, unit: "cm", value: 60, step: 1 },
+      { id: "t-tw", label: { bs: "Širina pločice",  de: "Fliesenbreite" }, unit: "cm", value: 30, step: 1 },
+      { id: "t-waste", label: { bs: "Dodatak za otpad", de: "Verschnittzuschlag" }, unit: "%", value: 10, step: 1, full: true },
+    ],
+    words: {
+      bs: { areaLen: "dužina površine", width: "širina", cap: "Broj = površina ÷ pločica + otpad",
+            unit: "pločica", cover: "za prekriti", perTile: "po pločici", buy: "za kupiti uklj. otpad", boxes: "kutija po 1,44 m²" },
+      de: { areaLen: "Länge der Fläche", width: "Breite", cap: "Anzahl = Fläche ÷ Fliesengröße + Verschnitt",
+            unit: "Fliesen", cover: "zu belegen", perTile: "pro Fliese", buy: "zu kaufen inkl. Verschnitt", boxes: "Kartons à 1,44 m²" }
+    },
+    note: {
+      bs: "10 % otpada odgovara ravnom polaganju; koristite 15 % za dijagonalne uzorke ili mnogo rezanja. Provjerite veličine pakovanja — većina kutija podnih pločica pokriva 1–1,5 m².",
+      de: "10 % Verschnitt passen für gerade Verlegung; 15 % bei diagonalen Mustern oder vielen Schnitten. Packgrößen prüfen — die meisten Bodenfliesen-Kartons decken 1–1,5 m²."
+    },
+    cost: { id: "t-price", label: { bs: "Cijena po m²", de: "Preis pro m²" }, unit: "KM/m²", value: 30 },
+    diagram: (w) => `<svg viewBox="0 0 260 170" role="img" aria-label="${w.cap}">
+      <rect class="shape" x="35" y="40" width="190" height="95"/>
+      <line class="dimline" x1="35" y1="72" x2="225" y2="72"/>
+      <line class="dimline" x1="35" y1="104" x2="225" y2="104"/>
+      <line class="dimline" x1="98" y1="40" x2="98" y2="135"/>
+      <line class="dimline" x1="161" y1="40" x2="161" y2="135"/>
+      <rect class="accent-stroke" fill="none" x="35" y="40" width="63" height="32"/>
+      ${dim(35, 26, 225, 26, w.areaLen)}
+      ${dim(242, 40, 242, 135, "")}
+      <text x="248" y="88" text-anchor="start" transform="rotate(-90 248 88)">${w.width}</text>
+    </svg><div class="cap">${w.cap}</div>`,
+    compute(q, w) {
+      const factor = 1 + num(q("t-waste")) / 100;
+      const area = num(q("t-l")) * num(q("t-w"));
+      const tileArea = (num(q("t-tl")) / 100) * (num(q("t-tw")) / 100);
+      const count = Math.ceil((area / tileArea) * factor);
+      const boxes = Math.ceil((area * factor) / 1.44);
+      return {
+        headline: `${int(count)}<small>${w.unit}</small>`,
+        costQty: area * factor,
+        breakdown: `
+          <div><b>${fmt(area, 1)} m²</b> ${w.cover} · <b>${fmt(tileArea * 10000, 0)} cm²</b> ${w.perTile}</div>
+          <div><b class="accent">${fmt(area * factor, 1)} m²</b> ${w.buy}</div>
+          <div>≈ <b>${int(boxes)}</b> ${w.boxes}</div>`
+      };
+    }
+  },
+  {
+    id: "fence",
+    tab:   { bs: "Ograda", de: "Zaun" },
+    title: { bs: "Trasa ograde", de: "Zaunverlauf" },
+    sub: {
+      bs: "Stubovi, polja i beton za postavljanje stubova duž ravne trase ograde.",
+      de: "Pfosten, Felder und Beton zum Setzen der Pfosten entlang eines geraden Zaunverlaufs."
+    },
+    fields: [
+      { id: "f-len",   label: { bs: "Dužina ograde", de: "Zaunlänge" }, unit: "m",  value: 24, step: 0.5 },
+      { id: "f-span",  label: { bs: "Razmak stubova", de: "Pfostenabstand" }, unit: "m", value: 2, step: 0.1 },
+      { id: "f-hole",  label: { bs: "Dubina rupe za stub", de: "Pfostenlochtiefe" }, unit: "cm", value: 60, step: 5 },
+      { id: "f-holed", label: { bs: "Prečnik rupe", de: "Lochdurchmesser" }, unit: "cm", value: 25, step: 1 },
+    ],
+    words: {
+      bs: { spacing: "razmak", hole: "rupa za stub", cap: "Stubovi = polja + 1 · beton po rupi",
+            unit: "stubova", spans: "polja / rasponi po", concrete: "beton za rupe stubova", bags: "× vreće brzovezujućeg betona 20 kg" },
+      de: { spacing: "Abstand", hole: "Pfostenloch", cap: "Pfosten = Felder + 1 · Beton pro Loch",
+            unit: "Pfosten", spans: "Felder / Abschnitte à", concrete: "Beton für Pfostenlöcher", bags: "× 20-kg-Fertigbetonsäcke" }
+    },
+    note: {
+      bs: "Ukopajte otprilike trećinu stuba; 60 cm odgovara ogradi od 1,8 m. Podaci o betonu pretpostavljaju jednu vreću od 20 kg ≈ 0,01 m³ ugrađene zapremine.",
+      de: "Etwa ein Drittel des Pfostens eingraben; 60 cm passen für einen 1,8-m-Zaun. Betonangaben gehen von einem 20-kg-Sack ≈ 0,01 m³ Setzvolumen aus."
+    },
+    cost: { id: "f-price", label: { bs: "Cijena po metru (materijal)", de: "Preis pro Meter (Material)" }, unit: "KM/m", value: 50 },
+    diagram: (w) => `<svg viewBox="0 0 260 170" role="img" aria-label="${w.cap}">
+      <line class="dimline" x1="20" y1="120" x2="245" y2="120"/>
+      <rect class="fillshape" x="38" y="55" width="8" height="65"/>
+      <rect class="fillshape" x="104" y="55" width="8" height="65"/>
+      <rect class="fillshape" x="170" y="55" width="8" height="65"/>
+      <rect class="fillshape" x="228" y="55" width="8" height="65"/>
+      <line class="shape" x1="46" y1="65" x2="104" y2="65"/>
+      <line class="shape" x1="46" y1="105" x2="104" y2="105"/>
+      <line class="shape" x1="112" y1="65" x2="170" y2="65"/>
+      <line class="shape" x1="112" y1="105" x2="170" y2="105"/>
+      <line class="shape" x1="178" y1="65" x2="228" y2="65"/>
+      <line class="shape" x1="178" y1="105" x2="228" y2="105"/>
+      ${dim(42, 40, 108, 40, w.spacing)}
+      <line class="accent-stroke" x1="38" y1="120" x2="46" y2="140"/>
+      <line class="accent-stroke" x1="46" y1="120" x2="38" y2="140"/>
+      <text x="56" y="138" text-anchor="start">${w.hole}</text>
+    </svg><div class="cap">${w.cap}</div>`,
+    compute(q, w) {
+      const len = num(q("f-len")), span = num(q("f-span"));
+      const spans = Math.ceil(len / span);
+      const posts = spans + 1;
+      const holeVol = Math.PI * Math.pow(num(q("f-holed")) / 200, 2) * (num(q("f-hole")) / 100);
+      const concrete = holeVol * posts;
+      const bags = Math.ceil(concrete / 0.01);
+      return {
+        headline: `${Number.isFinite(posts) ? int(posts) : "—"}<small>${w.unit}</small>`,
+        costQty: len,
+        breakdown: `
+          <div><b>${Number.isFinite(spans) ? int(spans) : "—"}</b> ${w.spans} <b>${fmt(span, 2)} m</b></div>
+          <div><b class="accent">${fmt(concrete, 2)} m³</b> ${w.concrete}</div>
+          <div>≈ <b>${int(bags)}</b> ${w.bags}</div>`
+      };
+    }
+  },
+];
+
+// ---------- build / render ----------
+const tabsEl = document.getElementById("tabs");
+const panelsEl = document.getElementById("panels");
+let activeId = calcs[0].id;
+
+function render() {
+  // preserve current input values across a language switch
+  const saved = {};
+  panelsEl.querySelectorAll("input, select").forEach(el => { saved[el.id] = el.value; });
+
+  document.documentElement.lang = LANG;
+  document.getElementById("site-title").textContent = UI.title[LANG];
+  document.getElementById("site-rev").textContent = UI.rev[LANG];
+  document.getElementById("site-tagline").textContent = UI.tagline[LANG];
+  document.getElementById("lang-bs").setAttribute("aria-pressed", String(LANG === "bs"));
+  document.getElementById("lang-de").setAttribute("aria-pressed", String(LANG === "de"));
+
+  tabsEl.innerHTML = "";
+  panelsEl.innerHTML = "";
+
+  calcs.forEach(c => {
+    const w = c.words[LANG];
+    const fieldsList = c.cost
+      ? c.fields.concat([{ id: c.cost.id, label: c.cost.label, unit: c.cost.unit, value: c.cost.value, step: 0.5, full: true }])
+      : c.fields;
+
+    const btn = document.createElement("button");
+    btn.id = `tab-${c.id}`;
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-controls", `panel-${c.id}`);
+    btn.setAttribute("aria-selected", String(c.id === activeId));
+    btn.textContent = c.tab[LANG];
+    btn.addEventListener("click", () => select(c.id));
+    tabsEl.appendChild(btn);
+
+    const sec = document.createElement("section");
+    sec.id = `panel-${c.id}`;
+    sec.setAttribute("role", "tabpanel");
+    sec.setAttribute("aria-labelledby", `tab-${c.id}`);
+    if (c.id === activeId) sec.classList.add("active");
+    sec.innerHTML = `<div class="card">
+      <h2 class="display">${c.title[LANG]}</h2>
+      <p class="sub">${c.sub[LANG]}</p>
+      <div class="calc-grid">
+        <div class="fields">${buildFields(fieldsList)}</div>
+        <div class="diagram">${c.diagram(w)}</div>
+        <div class="result mono" aria-live="polite">
+          <div class="headline" id="head-${c.id}"></div>
+          <div class="breakdown" id="break-${c.id}"></div>
+        </div>
+      </div>
+      <p class="note">${c.note[LANG]}</p>
+    </div>`;
+    panelsEl.appendChild(sec);
+
+    // restore saved values
+    sec.querySelectorAll("input, select").forEach(el => {
+      if (saved[el.id] !== undefined) el.value = saved[el.id];
+    });
+
+    const q = (id) => sec.querySelector("#" + id);
+    const update = () => {
+      const r = c.compute(q, w);
+      let breakdown = r.breakdown;
+      if (c.cost) {
+        const price = num(q(c.cost.id));
+        const total = (Number.isFinite(r.costQty) && Number.isFinite(price)) ? r.costQty * price : NaN;
+        breakdown = `<div class="costline"><b class="accent">${money(total)}</b> ${UI.totalCost[LANG]}</div>` + breakdown;
+      }
+      q(`head-${c.id}`).innerHTML = r.headline;
+      q(`break-${c.id}`).innerHTML = breakdown;
+    };
+    sec.querySelectorAll("input, select").forEach(el => el.addEventListener("input", update));
+    update();
+  });
+}
+
+function select(id) {
+  activeId = id;
+  calcs.forEach(c => {
+    document.getElementById(`tab-${c.id}`).setAttribute("aria-selected", String(c.id === id));
+    document.getElementById(`panel-${c.id}`).classList.toggle("active", c.id === id);
+  });
+}
+
+function setLang(lang) {
+  if (lang === LANG) return;
+  LANG = lang;
+  render();
+}
+
+document.getElementById("lang-bs").addEventListener("click", () => setLang("bs"));
+document.getElementById("lang-de").addEventListener("click", () => setLang("de"));
+
+render();
+</script>
+</body>
+</html>
